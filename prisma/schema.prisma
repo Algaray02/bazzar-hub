@@ -1,0 +1,263 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  SELLER
+}
+
+enum StoreCategory {
+  FOOD_BEVERAGE
+  FASHION
+  CRAFT
+  BEAUTY_CARE
+  ELECTRONICS
+  SERVICES
+  HOME_LIVING
+  ART_DESIGN
+  TOYS_HOBBY
+  BOOKS_STATIONERY
+  PET_SUPPLIES
+  SPORTS_OUTDOOR
+  AUTOMOTIVE
+  HEALTH_WELLNESS
+  DIGITAL_PRODUCTS
+  ACCESSORIES
+  GADGETS
+  JEWELRY
+  PLANTS_GARDEN
+  KIDS_BABY
+  LOCAL_BRANDS
+  OTHERS
+}
+
+enum Highlights {
+  LIVE_MUSIC
+  WORKSHOP
+  FOOD_STALLS
+  FASHION_MARKET
+  HANDICRAFT
+  TALKSHOW
+  COMMUNITY_EVENT
+  PHOTOBOOTH
+  GIVEAWAY
+  DISCOUNT
+  KIDS_AREA
+  MERCH_SALE
+  ART_EXHIBITION
+  CULINARY_FEST
+  SPORT_ACTIVITY
+  COOKING_DEMO
+  MEET_CREATOR
+  PETS_AREA
+  CAR_FREE_DAY
+  MARKETPLACE
+}
+
+enum PostCategory {
+  TIPS
+  NEWS
+  HIGHLIGHT
+  STORY
+}
+
+enum EventType {
+  WEEKLY
+  SPECIAL
+}
+
+enum BookingStatus {
+  PENDING
+  PAID
+  REJECTED
+  COMPLETED
+}
+
+enum MessageStatus {
+  UNREAD
+  READ
+  ARCHIVED
+}
+
+model User {
+  id        String    @id @default(uuid())
+  name      String
+  email     String    @unique
+  password  String
+  phone     String?
+  avatar    String?
+  role      Role      @default(SELLER)
+  bookings  Booking[]
+  sessions  Session[]
+  accounts  Account[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Booth {
+  id      String   @id @default(uuid())
+  code    String   @unique @default(uuid())
+  price   Int
+  eventId String
+  event   Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  booking Booking?
+
+  @@unique([eventId, code])
+}
+
+model Booking {
+  id           String        @id @default(uuid())
+  name         String
+  description  String        @db.Text
+  banner       String?
+  logo         String?
+  category     StoreCategory @default(FOOD_BEVERAGE)
+  paymentProof String?
+  status       BookingStatus @default(PENDING)
+  ticketCode   String        @unique @default(uuid())
+  scans        BookingScan[]
+  isCheckedIn  Boolean       @default(false)
+  checkInTime  DateTime?
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  boothId      String        @unique
+  booth        Booth         @relation(fields: [boothId], references: [id], onDelete: Cascade)
+  promoId      String?
+  promo        Promo?        @relation(fields: [promoId], references: [id])
+  reviews      Review[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  gallery      Gallery[]
+}
+
+model BookingScan {
+  id        String  @id @default(uuid())
+  bookingId String
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  ipAddress String?
+  userAgent String?
+
+  createdAt DateTime @default(now())
+
+  @@index([bookingId])
+}
+
+model Gallery {
+  id        String   @id @default(uuid())
+  url       String
+  bookingId String
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  name      String?
+  rating    Int
+  comment   String   @db.Text
+  bookingId String
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Promo {
+  id       String    @id @default(uuid())
+  code     String    @unique
+  amount   Int
+  quota    Int
+  isActive Boolean   @default(true)
+  bookings Booking[]
+}
+
+model Event {
+  id          String       @id @default(uuid())
+  title       String
+  description String       @db.Text
+  location    String
+  city        String
+  date        DateTime
+  time        String
+  type        EventType
+  organizer   Json?
+  image       String?
+  highlights  Highlights[]
+  rundown     Json?
+  faq         Json?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  booths      Booth[]
+}
+
+model Post {
+  id        String       @id @default(uuid())
+  title     String
+  slug      String       @unique
+  excerpt   String
+  content   String       @db.Text
+  image     String?
+  category  PostCategory @default(NEWS)
+  published Boolean      @default(true)
+  author    String
+  avatar    String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model ContactMessage {
+  id        String        @id @default(uuid())
+  name      String
+  email     String
+  subject   String
+  message   String        @db.Text
+  status    MessageStatus @default(UNREAD)
+  createdAt DateTime      @default(now())
+}
+
+model Account {
+  id                       String  @id @default(uuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? // @db.Text
+  access_token             String? // @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? // @db.Text
+  session_state            String?
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refresh_token_expires_in Int?
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
