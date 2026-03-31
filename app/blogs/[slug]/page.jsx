@@ -27,7 +27,7 @@ export default function BlogDetailPage() {
   const params = useParams();
   const router = useRouter();
 
-  const { data: post, isLoading, error } = useBlog(params.id);
+  const { data: post, isLoading, error } = useBlog(params.slug);
   const { data: blogsData } = useBlogs({ publishedOnly: true, limit: 10 });
 
   if (isLoading) {
@@ -192,7 +192,7 @@ export default function BlogDetailPage() {
                 {relatedPosts.length > 0 ? (
                   relatedPosts.map((related) => (
                     <Link
-                      href={`/blog/${related.id}`}
+                      href={`/blogs/${related.slug}`}
                       key={related.id}
                       className="group block"
                     >

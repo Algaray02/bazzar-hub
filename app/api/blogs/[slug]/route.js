@@ -3,7 +3,7 @@ import { getPostBySlug } from "@/lib/services/blogService";
 
 export async function GET(request, { params }) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
     const post = await getPostBySlug(slug);
 
     if (!post) {

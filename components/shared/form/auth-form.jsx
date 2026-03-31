@@ -35,7 +35,7 @@ const AuthForm = ({ type = "login", onSubmit, isPending, schema }) => {
 
   const handleGoogleLogin =
     type === "login"
-      ? () => signIn("google", { callbackUrl: "/seller" })
+      ? () => signIn("google", { callbackUrl: "/auth/redirect" })
       : null;
 
   const renderFields = () => {

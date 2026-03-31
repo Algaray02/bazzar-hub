@@ -150,7 +150,7 @@ export const PostCard = ({ post, index }) => {
 
             <motion.div whileHover={{ x: 5 }} whileTap={{ scale: 0.95 }}>
               <Link
-                href={`/blogs/${post.id}`}
+                href={`/blogs/${post.slug}`}
                 className="flex items-center justify-center rounded-full p-4 bg-transparent border border-white/10 text-zinc-400 transition-all duration-300 group-hover:bg-fuchsia-500/10 group-hover:border-fuchsia-500/50 group-hover:text-fuchsia-400 shadow-lg"
               >
                 <ArrowRight className="w-4 h-4" />

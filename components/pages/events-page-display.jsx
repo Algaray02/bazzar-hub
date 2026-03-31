@@ -133,7 +133,7 @@ const EventsPageDisplay = ({ initialEvents }) => {
 
                 <div className="md:hidden h-px bg-white/10 w-full" />
 
-                <div className="w-full md:w-[200px]">
+                <div className="w-full md:w-[200px] md:ml-6 md:mt-3">
                   <Select value={filterCity} onValueChange={setFilterCity}>
                     <SelectTrigger className="h-14 bg-linear-to-br from-zinc-900/80 to-black border-white/10 rounded-2xl text-zinc-300 focus:ring-2 focus:ring-fuchsia-500/50 hover:border-fuchsia-500/30 transition-all duration-300">
                       <MapPin className="w-4 h-4 mr-2 text-fuchsia-500" />
