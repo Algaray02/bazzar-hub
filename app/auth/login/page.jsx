@@ -48,6 +48,7 @@ const LoginPage = () => {
     <AuthLayout
       title="Selamat Datang Kembali"
       subtitle="Masuk ke dashboard seller Anda"
+      onBack={() => router.back()}
     >
       <AuthForm
         type="login"

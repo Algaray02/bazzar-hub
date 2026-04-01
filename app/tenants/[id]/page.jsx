@@ -48,14 +48,14 @@ export default function TenantDetailPage() {
   const { qrState, generateQr, closeQr } = useQrCode();
 
   const reviews = reviewsData?.data || [];
+  const galleryImages = tenant?.gallery || []; // Ambil dari data tenant atau array kosong
+  
   const avgRating =
     reviews.length > 0
       ? (
           reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
         ).toFixed(1)
       : "0.0";
-
-  const galleryImages = [1, 2, 3, 4, 5, 6];
 
   const handleNextImage = () => {
     setSelectedImageIndex((prev) =>
@@ -371,30 +371,36 @@ export default function TenantDetailPage() {
                   animate={{ opacity: 1 }}
                   className="grid grid-cols-2 md:grid-cols-3 gap-4"
                 >
-                  {galleryImages.map((item, index) => (
-                    <motion.div
-                      key={item}
-                      layoutId={`gallery-item-${index}`} // Magic motion untuk transisi smooth
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: index * 0.1 }}
-                      whileHover={{ scale: 1.02 }}
-                      onClick={() => setSelectedImageIndex(index)}
-                      className="aspect-square rounded-2xl bg-zinc-900 overflow-hidden border border-white/10 group cursor-pointer relative shadow-lg"
-                    >
-                      <img
-                        src={`/generic-product-display.png?height=600&width=600&query=product ${item}`}
-                        alt={`Product ${item}`}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
+                  {galleryImages.length > 0 ? (
+                    galleryImages.map((image, index) => (
+                      <motion.div
+                        key={image.id || index}
+                        layoutId={`gallery-item-${index}`}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: index * 0.1 }}
+                        whileHover={{ scale: 1.02 }}
+                        onClick={() => setSelectedImageIndex(index)}
+                        className="aspect-square rounded-2xl bg-zinc-900 overflow-hidden border border-white/10 group cursor-pointer relative shadow-lg"
+                      >
+                        <img
+                          src={image.url || "/placeholder.svg"}
+                          alt={`Product ${index + 1}`}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
 
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
-                        <div className="bg-white/10 p-3 rounded-full border border-white/20 backdrop-blur-md transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                          <ZoomIn className="w-6 h-6 text-white" />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
+                          <div className="bg-white/10 p-3 rounded-full border border-white/20 backdrop-blur-md transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <ZoomIn className="w-6 h-6 text-white" />
+                          </div>
                         </div>
-                      </div>
-                    </motion.div>
-                  ))}
+                      </motion.div>
+                    ))
+                  ) : (
+                    <div className="col-span-full text-center py-12 text-zinc-500">
+                      Belum ada galeri produk untuk tenant ini.
+                    </div>
+                  )}
                 </motion.div>
 
                 <Dialog
@@ -424,14 +430,14 @@ export default function TenantDetailPage() {
                       </button>
 
                       <AnimatePresence mode="wait">
-                        {selectedImageIndex !== null && (
+                        {selectedImageIndex !== null && galleryImages.length > 0 && (
                           <motion.img
                             key={selectedImageIndex}
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
                             transition={{ duration: 0.3 }}
-                            src={`/generic-product-display.png?height=800&width=800&query=product ${galleryImages[selectedImageIndex]}`}
+                            src={galleryImages[selectedImageIndex]?.url || "/placeholder.svg"}
                             alt="Selected Product"
                             className="max-h-full max-w-full object-contain rounded-lg shadow-2xl border border-white/10 bg-black"
                           />

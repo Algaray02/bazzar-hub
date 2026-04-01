@@ -1,61 +1,63 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-// --- 1. Helper: Supabase Storage ---
-const SUPABASE_URL = "https://ipwsnizynocaxwrwdrsf.supabase.co/storage/v1/object/public";
+// --- 1. Helper: Unsplash Collections ---
+const UNSPLASH_BASE = "https://images.unsplash.com";
+const CONFIG = "?w=800&q=80&auto=format&fit=crop";
 
 const ASSETS = {
   avatars: [
-    `${SUPABASE_URL}/avatar-user/avatar-user.jpg`,
-    `${SUPABASE_URL}/avatar-post/avatar-post.jpg`,
-    `${SUPABASE_URL}/avatar-user/avatar-user.jpg`,
-    `${SUPABASE_URL}/avatar-post/avatar-post.jpg`,
-    `${SUPABASE_URL}/avatar-user/avatar-user.jpg`,
+    "/photo-1535713875002-d1d0cf377fde", // Pria kacamata
+    "/photo-1494790108377-be9c29b29330", // Wanita tersenyum
+    "/photo-1599566150163-29194dcaad36", // Pria modern
+    "/photo-1438761681033-6461ffad8d80", // Wanita potret
+    "/photo-1472099645785-5658abf4ff4e", // Pria casual
   ],
   events: [
-    `${SUPABASE_URL}/image-event/image-event.jpg`,
-    `${SUPABASE_URL}/image-event/image-event.jpg`,
-    `${SUPABASE_URL}/image-event/image-event.jpg`,
-    `${SUPABASE_URL}/image-event/image-event.jpg`,
-    `${SUPABASE_URL}/image-event/image-event.jpg`,
+    "/photo-1492684223066-81342ee5ff30", // Konser/Crowd
+    "/photo-1540039155733-5bb30b53aa14", // Concert Hall
+    "/photo-1511578314322-379afb476865", // Creative market
+    "/photo-1531058020387-3be344556be6", // Meeting/Event
+    "/photo-1505373877841-8d25f7d46678", // Tech conference
   ],
   banners: [
-    `${SUPABASE_URL}/banner-booking/banner-booking.jpg`,
-    `${SUPABASE_URL}/banner-booking/banner-booking.jpg`,
-    `${SUPABASE_URL}/banner-booking/banner-booking.jpg`,
-    `${SUPABASE_URL}/banner-booking/banner-booking.jpg`,
-    `${SUPABASE_URL}/banner-booking/banner-booking.jpg`,
+    "/photo-1556742046-806950914120", // Storefront
+    "/photo-1441986300917-64674bd600d8", // Clothing store
+    "/photo-1528698827591-e19ccd7bc23d", // Market stall
+    "/photo-1601598851547-4302969d061b", // Coffee shop
+    "/photo-1472851294608-415522f96385", // Luxury display
   ],
   logos: [
-    `${SUPABASE_URL}/logo-booking/logo-booking.jpg`,
-    `${SUPABASE_URL}/logo-booking/logo-booking.jpg`,
-    `${SUPABASE_URL}/logo-booking/logo-booking.jpg`,
-    `${SUPABASE_URL}/logo-booking/logo-booking.jpg`,
+    "/photo-1629367494173-c78a56567877", // Abstract shape
+    "/photo-1611162617474-5b21e879e113", // Digital art
+    "/photo-1599305445671-ac291c95aaa9", // Minimalist logo
+    "/photo-1560415755-bd80d7555eb8", // Graphic design
   ],
   payments: [
-    `${SUPABASE_URL}/payment-proof-booking/payment-proof-booking.jpg`,
-    `${SUPABASE_URL}/payment-proof-booking/payment-proof-booking.jpg`,
-    `${SUPABASE_URL}/payment-proof-booking/payment-proof-booking.jpg`,
+    "/photo-1554224155-8d04cb21cd6c", // Financial/Paper
+    "/photo-1580048915913-4f8f5cb481c4", // Invoice pile
+    "/photo-1634733988685-a91a719c2c92", // Digital payment screen
   ],
   posts: [
-    `${SUPABASE_URL}/image-post/image-post.jpg`,
-    `${SUPABASE_URL}/image-post/image-post.jpg`,
-    `${SUPABASE_URL}/image-post/image-post.jpg`,
-    `${SUPABASE_URL}/image-post/image-post.jpg`,
+    "/photo-1504711434969-e33886168f5c", // News/Reading
+    "/photo-1518770660439-4636190af475", // Technology
+    "/photo-1432821596592-e2c18b78144f", // Blog writing
+    "/photo-1557804506-669a67965ba0", // Corporate
   ],
   gallery: [
-    `${SUPABASE_URL}/gallery-booking/gallery-booking.jpg`,
-    `${SUPABASE_URL}/gallery-booking/gallery-booking.jpg`,
-    `${SUPABASE_URL}/gallery-booking/gallery-booking.jpg`,
-    `${SUPABASE_URL}/gallery-booking/gallery-booking.jpg`,
-    `${SUPABASE_URL}/gallery-booking/gallery-booking.jpg`,
+    "/photo-1511512578047-dfb367046420", // Product 1
+    "/photo-1523275335684-37898b6baf30", // Product 2
+    "/photo-1505740420928-5e560c06d30e", // Product 3
+    "/photo-1572635196237-14b3f281e960", // Product 4
+    "/photo-1560343090-f0409e92791a", // Product 5
   ],
 };
 
-// Fungsi helper untuk mengambil URL random
+// Fungsi helper untuk mengambil URL lengkap random
 const getAsset = (type) => {
   const arr = ASSETS[type];
-  return arr[Math.floor(Math.random() * arr.length)];
+  const path = arr[Math.floor(Math.random() * arr.length)];
+  return `${UNSPLASH_BASE}${path}${CONFIG}`;
 };
 
 const getRandomInt = (min, max) =>
