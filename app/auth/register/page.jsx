@@ -17,7 +17,7 @@ const RegisterPage = () => {
     <AuthLayout
       title="Buat Akun Baru"
       subtitle="Bergabung dengan komunitas seller terbaik"
-      onBack={() => router.back()}
+      onBack={() => router.push("/")}
     >
       <AuthForm
         type="register"
