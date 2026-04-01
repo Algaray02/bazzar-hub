@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import {
   getAllContactMessages,
   getMessageStats,
+  createContactMessage,
 } from "@/lib/services/contactService";
 
 export async function GET(request) {
@@ -33,6 +34,68 @@ export async function GET(request) {
     console.error("Get messages error:", error);
     return NextResponse.json(
       { error: error.message || "Gagal mengambil data messages" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request) {
+  try {
+    const body = await request.json();
+    const { name, email, subject, message } = body;
+
+    // Validasi input
+    if (!name || !email || !subject || !message) {
+      return NextResponse.json(
+        { error: "Semua field harus diisi" },
+        { status: 400 }
+      );
+    }
+
+    // Validasi email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { error: "Format email tidak valid" },
+        { status: 400 }
+      );
+    }
+
+    // Validasi panjang (trim dan cek)
+    if (name.trim().length < 3) {
+      return NextResponse.json(
+        { error: "Nama harus minimal 3 karakter" },
+        { status: 400 }
+      );
+    }
+
+    if (message.trim().length < 10) {
+      return NextResponse.json(
+        { error: "Pesan harus minimal 10 karakter" },
+        { status: 400 }
+      );
+    }
+
+    // Simpan ke database
+    const result = await createContactMessage({
+      name: name.trim(),
+      email: email.trim(),
+      subject: subject.trim(),
+      message: message.trim(),
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Pesan berhasil dikirim! Tim kami akan segera menghubungi Anda.",
+        data: result,
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error("Send message error:", error);
+    return NextResponse.json(
+      { error: error.message || "Gagal mengirim pesan" },
       { status: 500 }
     );
   }

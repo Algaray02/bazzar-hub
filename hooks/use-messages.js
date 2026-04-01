@@ -43,6 +43,36 @@ export const useMessageStats = (options = {}) => {
   });
 };
 
+export const useSendMessage = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data) => {
+      const response = await fetch("/api/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Gagal mengirim pesan");
+      }
+
+      return result;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: MESSAGE_KEYS.all });
+    },
+    onError: (error) => {
+      toast.error(error.message || "Gagal mengirim pesan");
+    },
+  });
+};
+
 export const useUpdateMessageStatus = () => {
   const queryClient = useQueryClient();
 

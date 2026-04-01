@@ -1,25 +1,42 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Send, Mail, MapPin, Phone } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { useSendMessage } from "@/hooks/use-messages";
 
 export default function ContactPage() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { mutate: sendMessage, isPending } = useSendMessage();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setTimeout(() => {
-      alert("Pesan berhasil dikirim! Tim kami akan segera menghubungi Anda.");
-      setIsSubmitting(false);
-      e.target.reset();
-    }, 1500);
+
+    sendMessage(formData, {
+      onSuccess: () => {
+        toast.success("Pesan berhasil dikirim! Tim kami akan segera menghubungi Anda.");
+        setFormData({ name: "", email: "", subject: "", message: "" });
+      },
+    });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   return (
@@ -109,6 +126,9 @@ export default function ContactPage() {
                       </Label>
                       <Input
                         id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
                         placeholder="Masukkan nama Anda"
                         className="bg-black/50 border-white/10 text-white h-12 focus-visible:ring-fuchsia-500"
                         required
@@ -120,7 +140,10 @@ export default function ContactPage() {
                       </Label>
                       <Input
                         id="email"
+                        name="email"
                         type="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
                         placeholder="nama@email.com"
                         className="bg-black/50 border-white/10 text-white h-12 focus-visible:ring-fuchsia-500"
                         required
@@ -134,6 +157,9 @@ export default function ContactPage() {
                     </Label>
                     <Input
                       id="subject"
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleInputChange}
                       placeholder="Contoh: Kerjasama Event, Kendala Teknis"
                       className="bg-black/50 border-white/10 text-white h-12 focus-visible:ring-fuchsia-500"
                       required
@@ -146,6 +172,9 @@ export default function ContactPage() {
                     </Label>
                     <Textarea
                       id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
                       placeholder="Tuliskan detail pertanyaan atau kebutuhan Anda..."
                       className="bg-black/50 border-white/10 text-white min-h-[150px] resize-none focus-visible:ring-fuchsia-500"
                       required
@@ -154,10 +183,10 @@ export default function ContactPage() {
 
                   <Button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isPending}
                     className="w-full h-12 bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-bold text-lg shadow-lg shadow-fuchsia-500/20"
                   >
-                    {isSubmitting ? "Mengirim..." : "Kirim Pesan"}
+                    {isPending ? "Mengirim..." : "Kirim Pesan"}
                     <Send className="w-5 h-5 ml-2" />
                   </Button>
                 </form>
