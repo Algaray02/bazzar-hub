@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bazzarhub.algaray.biz.id/sitemap.xml
+
+# Block admin and seller dashboard pages
+Disallow: /admin/
+Disallow: /seller/
+Disallow: /api/

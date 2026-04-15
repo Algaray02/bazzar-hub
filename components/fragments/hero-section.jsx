@@ -4,14 +4,14 @@ import Link from "next/link";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
-      <div className="absolute inset-0 bg-[#030014]">
-        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-fuchsia-600/20 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[0%] right-[-5%] w-[600px] h-[600px] bg-pink-600/10 rounded-full blur-[120px]" />
-        <div className="absolute top-[20%] right-[20%] w-[300px] h-[300px] bg-rose-600/20 rounded-full blur-[100px]" />
+    <section className="relative min-h-screen flex items-center pt-20 overflow-hidden" aria-label="Hero section BazarHub">
+      <div className="absolute inset-0 bg-[#030014]" aria-hidden="true">
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-fuchsia-600/20 rounded-full blur-[120px]" aria-hidden="true" />
+        <div className="absolute bottom-[0%] right-[-5%] w-[600px] h-[600px] bg-pink-600/10 rounded-full blur-[120px]" aria-hidden="true" />
+        <div className="absolute top-[20%] right-[20%] w-[300px] h-[300px] bg-rose-600/20 rounded-full blur-[100px]" aria-hidden="true" />
       </div>
 
-      <div className="absolute inset-0 bg-[url('https://grainy-linears.vercel.app/noise.svg')] opacity-20"></div>
+      <div className="absolute inset-0 bg-[url('https://grainy-linears.vercel.app/noise.svg')] opacity-20" aria-hidden="true"></div>
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">

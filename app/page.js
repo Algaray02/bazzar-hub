@@ -225,27 +225,42 @@ const HomePage = () => {
             {[
               {
                 title: "Platform",
-                links: ["Cari Event", "Daftar Tenant", "Pricing", "Features"],
+                links: [
+                  { label: "Cari Event", href: "/events" },
+                  { label: "Daftar Tenant", href: "/tenants" },
+                  { label: "Blog", href: "/blog" },
+                  { label: "Fitur", href: "/#features" },
+                ],
               },
               {
-                title: "Company",
-                links: ["About Us", "Careers", "Blog", "Contact"],
+                title: "Perusahaan",
+                links: [
+                  { label: "Tentang Kami", href: "/about" },
+                  { label: "Karir", href: "/careers" },
+                  { label: "Blog", href: "/blog" },
+                  { label: "Hubungi Kami", href: "/contact" },
+                ],
               },
               {
                 title: "Legal",
-                links: ["Terms", "Privacy", "Guidelines", "License"],
+                links: [
+                  { label: "Syarat & Ketentuan", href: "/terms" },
+                  { label: "Kebijakan Privasi", href: "/privacy" },
+                  { label: "Guidelines", href: "/guidelines" },
+                  { label: "Lisensi", href: "/license" },
+                ],
               },
             ].map((col, i) => (
               <div key={i}>
                 <h4 className="font-semibold text-white mb-4">{col.title}</h4>
                 <ul className="space-y-2">
                   {col.links.map((link) => (
-                    <li key={link}>
+                    <li key={link.label}>
                       <Link
-                        href="#"
+                        href={link.href}
                         className="text-zinc-500 hover:text-fuchsia-400 text-sm transition-colors"
                       >
-                        {link}
+                        {link.label}
                       </Link>
                     </li>
                   ))}
@@ -257,13 +272,13 @@ const HomePage = () => {
           <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-zinc-600">
             <p>&copy; 2025 BazarHub Inc. All rights reserved.</p>
             <div className="flex gap-6">
-              <Link href="#" className="hover:text-white transition-colors">
+              <Link href="https://instagram.com/bazzarhub" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" aria-label="Instagram BazarHub">
                 Instagram
               </Link>
-              <Link href="#" className="hover:text-white transition-colors">
+              <Link href="https://twitter.com/bazzarhub" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" aria-label="Twitter BazarHub">
                 Twitter
               </Link>
-              <Link href="#" className="hover:text-white transition-colors">
+              <Link href="https://linkedin.com/company/bazzarhub" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" aria-label="LinkedIn BazarHub">
                 LinkedIn
               </Link>
             </div>
